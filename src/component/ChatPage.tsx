@@ -1,5 +1,5 @@
 import { CompatClient, Stomp } from "@stomp/stompjs";
-import React, { MutableRefObject, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import SockJS from "sockjs-client";
 
 interface SocketClient {
