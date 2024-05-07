@@ -1,15 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './component/MainPage';
-import TestPage from './component/testPage';
+import ChatPage from './component/ChatPage';
+import LoginPage from './component/LoginPage';
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/login" element={<TestPage />} />
-          <Route path="/socket" element={<MainPage />} />
+          <Route path="/" element={<ChatPage />} />
         </Routes>
       </Router>
     </div>

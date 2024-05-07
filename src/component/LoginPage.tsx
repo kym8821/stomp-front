@@ -5,25 +5,6 @@ const decodedServiceKey = decodeURIComponent(
 );
 
 const TestPage = () => {
-  const axiosCheck = async () => {
-    const res = await axios
-      .get(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst`, {
-        params: {
-          serviceKey: decodedServiceKey,
-          // numOfRows: 10,
-          // pageNo: 1,
-          // base_date: "20240428",
-          // base_time: "0600",
-          // nx: 55,
-          // ny: 127,
-          dataType: "JSON",
-        },
-      })
-      .then(async (res) => res.data)
-      .catch((err) => console.log(err));
-    console.log(res);
-  };
-
   const isLoginSuccess = async () => {
     try {
       await fetch("http://localhost:8080/test", {
@@ -52,7 +33,6 @@ const TestPage = () => {
       <h1>Login</h1>
       <button onClick={onGoogleLogin}>google login</button>
       <button onClick={isLoginSuccess}>check login</button>
-      <button onClick={axiosCheck}>axios</button>
     </>
   );
 };
