@@ -1,6 +1,6 @@
-import { CompatClient, Stomp } from "@stomp/stompjs";
-import React, { MutableRefObject, useRef, useState } from "react";
-import SockJS from "sockjs-client";
+import { CompatClient, Stomp } from '@stomp/stompjs';
+import React, { MutableRefObject, useRef, useState } from 'react';
+import SockJS from 'sockjs-client';
 
 interface SocketClient {
   username: string;
@@ -11,7 +11,7 @@ const GenerateClient = (username: string) => {
   return {
     username: username,
     client: Stomp.over(() => {
-      const sock = new SockJS("http://localhost:8080/ws");
+      const sock = new SockJS('http://localhost:8080/ws');
       return sock;
     }),
   } as SocketClient;
@@ -20,20 +20,26 @@ const GenerateClient = (username: string) => {
 const MainPage = () => {
   const inputRef = useRef(null);
   const [message, setMessage]: any = useState(undefined);
-  const [messageContent, setMessageContent]: any = useState("hello");
-  const [socketClients, setSocketClients]: any = useState([GenerateClient("kym8821"), GenerateClient("louie9798")]);
+  const [messageContent, setMessageContent]: any = useState('hello');
+  const [socketClients, setSocketClients]: any = useState([
+    GenerateClient('kym8821'),
+    GenerateClient('louie9798'),
+    GenerateClient('김용민'),
+  ]);
 
   const connectSocket = (socketClient: SocketClient) => {
+    const username = socketClient.username;
     socketClient.client.connect(
-      { user: socketClient.username },
+      { user: username },
       () => {
         // callback 함수 설정, 대부분 여기에 sub 함수 씀
-        console.log("connect success!");
+        console.log('connect success!');
         socketClient.client?.subscribe(`/topic/notice`, (message) => {
           console.log(message);
           setMessage(message.body);
         });
         socketClient.client?.subscribe(`/user/queue/sendToUser`, (message) => {
+          console.log(username);
           console.log(message);
           setMessage(message.body);
         });
@@ -43,17 +49,17 @@ const MainPage = () => {
         });
       },
       () => {
-        console.log("connection failed...");
+        console.log('connection failed...');
       },
       () => {
-        console.log("connection closed");
+        console.log('connection closed');
       }
     );
   };
 
   const connectHandler = () => {
     socketClients.map(async (socketClient: SocketClient) => {
-      console.log("connect " + socketClient.username);
+      console.log('connect ' + socketClient.username);
       await connectSocket(socketClient);
     });
   };
@@ -63,12 +69,12 @@ const MainPage = () => {
       if (!socketClient.client) return;
       console.log(socketClient.username);
       socketClient.client.send(
-        "/app/notice",
+        '/app/notice',
         {
           user: socketClient.username,
         },
         JSON.stringify({
-          message: "send to everybody",
+          message: 'send to everybody',
         })
       );
     });
@@ -78,11 +84,11 @@ const MainPage = () => {
     const senderClient = socketClients[0].client;
     if (!senderClient) return;
     senderClient.send(
-      "/app/sendToUser",
+      '/app/sendToUser',
       {},
       JSON.stringify({
-        message: "send to user",
-        username: "louie9798",
+        message: 'send to user',
+        username: 'louie9798',
       })
     );
   };
