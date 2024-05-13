@@ -1,10 +1,8 @@
-import axios from "axios";
-
-const decodedServiceKey = decodeURIComponent(
-  "7ep1HIodLpMKtYDoLYtumjQZPI8GXTac57Qnu4AH6qEfKuCor7QCjFeMNeaE0rvsa4aJxPE8p88oyt9iuffceg%3D%3D"
-);
+import { useNavigate } from "react-router-dom";
 
 const TestPage = () => {
+  const navigate = useNavigate();
+
   const isLoginSuccess = async () => {
     try {
       await fetch("http://localhost:8080/test", {
@@ -28,11 +26,16 @@ const TestPage = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000";
   };
 
+  const clickChatBtnHandler = () => {
+    navigate("/chat");
+  };
+
   return (
     <>
       <h1>Login</h1>
       <button onClick={onGoogleLogin}>google login</button>
       <button onClick={isLoginSuccess}>check login</button>
+      <button onClick={clickChatBtnHandler}>chat</button>
     </>
   );
 };
