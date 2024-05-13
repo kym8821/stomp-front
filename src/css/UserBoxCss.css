@@ -1,0 +1,11 @@
+.userbox {
+  display: flex;
+  width: 10rem;
+  height: 5rem;
+  border-radius: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  background-color: #00f;
+}

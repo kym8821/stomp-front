@@ -7,24 +7,14 @@ export interface SocketClient {
 }
 
 export const generateSocketClient = (userId: Number) => {
-  return {
+  const socketClient = {
     userId: userId,
     client: Stomp.over(() => {
       const sock = new SockJS('http://localhost:8080/ws');
       return sock;
     }),
   } as SocketClient;
-};
 
-function socketErrorHandler() {
-  console.log('connection failed...');
-}
-
-function socketColsureHandler() {
-  console.log('connection closed');
-}
-
-export const connect = (socketClient: SocketClient) => {
   socketClient.client.connect(
     { user: socketClient.userId },
     () => {
@@ -41,3 +31,11 @@ export const connect = (socketClient: SocketClient) => {
   );
   return socketClient;
 };
+
+function socketErrorHandler() {
+  console.log('connection failed...');
+}
+
+function socketColsureHandler() {
+  console.log('connection closed');
+}
