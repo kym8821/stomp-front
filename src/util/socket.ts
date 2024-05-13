@@ -29,7 +29,6 @@ export const generateSocketClient = (userId: Number) => {
     socketErrorHandler,
     socketColsureHandler
   );
-
   return socketClient;
 };
 
