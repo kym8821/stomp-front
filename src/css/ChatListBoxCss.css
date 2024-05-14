@@ -1,0 +1,24 @@
+.chatListBoxContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 채팅 메시지 간격 조정 */
+}
+
+.sendChat,
+.recvChat {
+  display: flex;
+  align-items: center; /* 내용을 중앙 정렬 */
+  padding: 5px;
+  border-radius: 5px; /* 채팅 박스 모서리 둥글게 */
+  margin: 5px;
+}
+
+.sendChat {
+  justify-content: flex-end; /* sendChat를 오른쪽으로 정렬 */
+  background-color: #dcf8c6; /* 밝은 녹색 계열로 배경 설정 */
+}
+
+.recvChat {
+  justify-content: flex-start; /* recvChat를 왼쪽으로 정렬 */
+  background-color: #ffffff; /* 흰색으로 배경 설정 */
+}

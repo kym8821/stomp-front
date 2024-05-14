@@ -1,0 +1,6 @@
+.userListBoxContainer {
+  display: flex;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  column-gap: 1rem;
+}

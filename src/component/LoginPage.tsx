@@ -1,22 +1,14 @@
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const TestPage = () => {
   const navigate = useNavigate();
 
   const isLoginSuccess = async () => {
+    axios.defaults.withCredentials = true;
     try {
-      await fetch("http://localhost:8080/test", {
-        credentials: "include",
-      })
-        .then(async (res) => await res.json())
-        .then(function (data) {
-          alert(data);
-          console.log(data);
-        })
-        .catch(function (err) {
-          alert(err);
-          console.log(err);
-        });
+      const res = await axios.post("http://localhost:8080/signup").catch((err) => console.log(err));
+      console.log(res);
     } catch (err) {
       console.log(err);
     }
