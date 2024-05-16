@@ -1,5 +1,5 @@
-import { ChangeEvent, InputHTMLAttributes, useState } from "react";
-import { User } from "../util/Users";
+import { ChangeEvent, InputHTMLAttributes, useState } from 'react';
+import { User } from '../util/Users';
 
 type loginProps = {
   setUser: Function;
@@ -14,10 +14,13 @@ const SimpleLogin = (props: loginProps) => {
   };
 
   const loginhandler = async () => {
-    const users: User[] = await fetch("http://localhost:8080/users")
+    const users: User[] | undefined = await fetch('http://localhost:8080/users', {
+      credentials: 'include',
+    })
       .then(async (res) => (await res.json()).data)
       .catch((err) => console.log(err));
     console.log(users);
+    if (!users) return;
     const lst: User[] = [];
     users.map((user) => {
       if (username == user.username) {

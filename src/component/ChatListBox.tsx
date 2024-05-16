@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Chat } from "../util/Chat";
-import { User } from "../util/Users";
-import "../css/ChatListBoxCss.css";
+import { useEffect, useState } from 'react';
+import { Chat } from '../util/Chat';
+import { User } from '../util/Users';
+import '../css/ChatListBoxCss.css';
 
 type ChatListBoxType = {
   user: User;
@@ -13,12 +13,12 @@ const ChatListBox = (props: ChatListBoxType) => {
 
   useEffect(() => {
     const lst: any[] = [];
-    console.log("chatlist changed");
+    console.log('chatlist changed');
     props.chatList.map((chat) => {
-      const classname = props.user.id == chat.userId ? "sendChat" : "recvChat";
-      if (classname === "sendChat") {
+      const classname = props.user.id == chat.userId ? 'sendChat' : 'recvChat';
+      if (classname === 'sendChat') {
         lst.push(
-          <div className={classname} key={`${chat.id}-${chat.unread}`}>
+          <div className={classname} key={`${chat.id}-${chat.userId}-${chat.unread}`}>
             <div>{chat.unread}</div>
             <div>{chat.content}</div>
           </div>
