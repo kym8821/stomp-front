@@ -2,13 +2,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const TestPage = () => {
+  const host = '15.165.25.19';
+  //const host = 'localhost';
   const navigate = useNavigate();
 
   const onLogin = async () => {
     axios.defaults.withCredentials = true;
     try {
       const res = await axios
-        .post('http://localhost:8080/signup')
+        .post(`http://${host}:8080/signup`)
         .then((res) => {
           console.log('login success');
           return res.data;
@@ -21,8 +23,17 @@ const TestPage = () => {
   };
 
   const onGoogleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000';
+    window.location.href = `http://${host}:8080/oauth2/authorization/google`;
   };
+
+  // const onGoogleLogin = () => {
+  //   axios
+  //     .get('http://localhost:8080/', { withCredentials: true })
+  //     .then((res) => {
+  //       alert(JSON.stringify(res.data));
+  //     })
+  //     .catch((error) => alert(error));
+  // };
 
   const clickChatBtnHandler = () => {
     navigate('/chat');
