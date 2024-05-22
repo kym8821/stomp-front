@@ -1,13 +1,13 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import SimpleLogin from './SimpleLogin';
-import { User } from '../util/Users';
-import UserBox from './UserBox';
-import UserListBox from './UserListBox';
-import { send } from 'process';
-import { CompatClient, Stomp, StompSubscription } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
-import { Chat } from '../util/Chat';
-import ChatListBox from './ChatListBox';
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import SimpleLogin from "./SimpleLogin";
+import { User } from "../util/Users";
+import UserBox from "./UserBox";
+import UserListBox from "./UserListBox";
+import { send } from "process";
+import { CompatClient, Stomp, StompSubscription } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { Chat } from "../util/Chat";
+import ChatListBox from "./ChatListBox";
 
 interface SocketClient {
   recvId: number;
@@ -16,6 +16,7 @@ interface SocketClient {
 }
 
 const ChatPage = () => {
+  const host = "localhost";
   const [user, setUser] = useState<User | undefined>(undefined);
   const recv = useRef<User>();
   const [userList, setUserList] = useState<User[]>([]);
@@ -36,8 +37,8 @@ const ChatPage = () => {
   const getChatList = async () => {
     if (!sender.current || !user) return undefined;
     // chatList 요청
-    const userChatList: Chat[] | undefined = await fetch(`http://localhost:8080/chat/${sender.current.roomId}`, {
-      credentials: 'include',
+    const userChatList: Chat[] | undefined = await fetch(`http://${host}:8080/chat/${sender.current.roomId}`, {
+      credentials: "include",
     })
       .then(async (res) => (await res.json()).data)
       .catch((err) => {
@@ -74,7 +75,7 @@ const ChatPage = () => {
   };
 
   function updateChatUnread(chatMessage: any) {
-    console.log('update chat unread');
+    console.log("update chat unread");
     // 함수형 업데이트를 사용하여 chatList 업데이트
     setChatList((currentChatList) => {
       // chatList가 비어있으면 상태 변경 없이 현재 상태 반환
@@ -82,9 +83,7 @@ const ChatPage = () => {
         return currentChatList;
       }
       // 응답받은 chat의 unread 수정을 위한 새로운 배열 반환
-      return currentChatList.map((chat) =>
-        chat.id === chatMessage.id ? { ...chat, unread: chatMessage.unread } : chat
-      );
+      return currentChatList.map((chat) => (chat.id === chatMessage.id ? { ...chat, unread: chatMessage.unread } : chat));
     });
   }
 
@@ -101,17 +100,17 @@ const ChatPage = () => {
         </div>
       );
       const room = await fetch(`http://localhost:8080/chatroom?userId=${user?.id}&userId=${_user.id}`, {
-        credentials: 'include',
+        credentials: "include",
       })
         .then(async (res) => (await res.json()).data)
         .catch((err) => console.log(err));
       const roomId = room.id;
       const socket = Stomp.over(() => {
-        const sock = new SockJS('http://localhost:8080/ws');
+        const sock = new SockJS("http://localhost:8080/ws");
         return sock;
       });
       socket.connect({ user: user.id }, async () => {
-        const decoder = new TextDecoder('utf-8');
+        const decoder = new TextDecoder("utf-8");
         socket.subscribe(`/queue/chatting/${roomId}`, (message) => {
           // ArrayBuffer를 UTF-8 문자열로 변환
           if (!recv.current || !sender.current) return;
@@ -157,11 +156,11 @@ const ChatPage = () => {
 
   const messageSubmitHandler = () => {
     if (!sender.current || !user) {
-      console.log('no sender');
+      console.log("no sender");
       return;
     }
     sender.current.socket.send(
-      '/app/chatting',
+      "/app/chatting",
       {},
       JSON.stringify({
         roomId: sender.current.roomId,
