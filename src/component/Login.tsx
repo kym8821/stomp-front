@@ -1,15 +1,22 @@
-import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import React from 'react';
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import axios from "axios";
+import React from "react";
 
 const Login = () => {
-  const clientId = '599467764330-imh8k96aer7kbghf1432dd4vjnj9814j.apps.googleusercontent.com';
-  const redirectUri = 'http://localhost:3000';
-  const google_token_url = `
-    https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email
-  `;
+  const clientId = "599467764330-imh8k96aer7kbghf1432dd4vjnj9814j.apps.googleusercontent.com";
 
-  const onSuccess = (res: CredentialResponse) => {
-    console.log(res.credential);
+  const onSuccess = async (res: CredentialResponse) => {
+    const token = res.credential;
+    console.log(token);
+    axios.defaults.withCredentials = true;
+    const loginResponse = await axios
+      .post("http://localhost:8080/sign-in", {
+        token: token,
+      })
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+    console.log(loginResponse);
+    //window.location.href = "http://localhost:3000";
   };
 
   const onError = () => {};
@@ -17,7 +24,7 @@ const Login = () => {
   return (
     <div>
       <GoogleOAuthProvider clientId={clientId}>
-        <GoogleLogin onSuccess={onSuccess} onError={onError} useOneTap />
+        <GoogleLogin onSuccess={onSuccess} onError={onError} />
       </GoogleOAuthProvider>
     </div>
   );
