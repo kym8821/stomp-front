@@ -1,7 +1,8 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ChatPage from "./component/ChatPage";
-import LoginPage from "./component/LoginPage";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ChatPage from './component/ChatPage';
+import LoginPage from './component/LoginPage';
+import Login from './component/Login';
 
 function App() {
   return (

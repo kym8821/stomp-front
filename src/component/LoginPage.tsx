@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Login from "./Login";
 
 const TestPage = () => {
-  // const host = "15.165.25.19";
   const host = "localhost";
   const navigate = useNavigate();
 
@@ -24,7 +24,15 @@ const TestPage = () => {
 
   const onGoogleLogin = () => {
     window.location.href = `http://${host}:8080/oauth2/authorization/google`;
-    // axios.get(`http://${host}:8080/`).then(res => res.headers.)
+  };
+
+  const getState = () => {
+    axios
+      .get("http://localhost:8080/login-info", { withCredentials: true })
+      .then((res) => {
+        alert(res.data.body);
+      })
+      .catch((error) => alert(error));
   };
 
   const clickChatBtnHandler = () => {
@@ -32,12 +40,11 @@ const TestPage = () => {
   };
 
   return (
-    <>
-      <h1>Login</h1>
-      <button onClick={onGoogleLogin}>google login</button>
-      <button onClick={onLogin}>SignUp</button>
+    <div>
+      <Login />
       <button onClick={clickChatBtnHandler}>chat</button>
-    </>
+      <button onClick={getState}>state</button>
+    </div>
   );
 };
 

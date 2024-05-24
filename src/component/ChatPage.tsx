@@ -16,7 +16,6 @@ interface SocketClient {
 }
 
 const ChatPage = () => {
-  const host = "localhost";
   const [user, setUser] = useState<User | undefined>(undefined);
   const recv = useRef<User>();
   const [userList, setUserList] = useState<User[]>([]);
@@ -37,7 +36,7 @@ const ChatPage = () => {
   const getChatList = async () => {
     if (!sender.current || !user) return undefined;
     // chatList 요청
-    const userChatList: Chat[] | undefined = await fetch(`http://${host}:8080/chat/${sender.current.roomId}`, {
+    const userChatList: Chat[] | undefined = await fetch(`http://localhost:8080/chat/${sender.current.roomId}`, {
       credentials: "include",
     })
       .then(async (res) => (await res.json()).data)
@@ -111,6 +110,7 @@ const ChatPage = () => {
       });
       socket.connect({ user: user.id }, async () => {
         const decoder = new TextDecoder("utf-8");
+        console.log(`/queue/chatting/${roomId}`);
         socket.subscribe(`/queue/chatting/${roomId}`, (message) => {
           // ArrayBuffer를 UTF-8 문자열로 변환
           if (!recv.current || !sender.current) return;
