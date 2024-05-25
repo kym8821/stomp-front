@@ -1,25 +1,26 @@
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Login from "./Login";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { randomInt } from 'crypto';
+import Login from './Login';
+import { profile } from 'console';
 
 const TestPage = () => {
-  const host = "localhost";
+  const host = 'localhost';
   const navigate = useNavigate();
 
-  const onLogin = async () => {
-    axios.defaults.withCredentials = true;
-    try {
-      const res = await axios
-        .post(`http://${host}:8080/signup`)
-        .then((res) => {
-          console.log("login success");
-          return res.data;
-        })
-        .catch((err) => console.log(err));
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
+  const signUpHandler = async () => {
+    const res = await axios
+      .post('http://localhost:8080/signup', {
+        name: 'user',
+        role: '헨젤',
+        profileMessage: '?',
+        profileImageUrl: '?',
+        interestKeyword: ['요리'],
+        concernKeyword: ['소득'],
+      })
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+    console.log(res);
   };
 
   const onGoogleLogin = () => {
@@ -28,7 +29,7 @@ const TestPage = () => {
 
   const getState = () => {
     axios
-      .get("http://localhost:8080/login-info", { withCredentials: true })
+      .get('http://localhost:8080/login-info', { withCredentials: true })
       .then((res) => {
         alert(res.data.body);
       })
@@ -36,7 +37,7 @@ const TestPage = () => {
   };
 
   const clickChatBtnHandler = () => {
-    navigate("/chat");
+    navigate('/chat');
   };
 
   return (
@@ -44,6 +45,7 @@ const TestPage = () => {
       <Login />
       <button onClick={clickChatBtnHandler}>chat</button>
       <button onClick={getState}>state</button>
+      <button onClick={signUpHandler}>signup</button>
     </div>
   );
 };

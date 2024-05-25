@@ -17,13 +17,15 @@ const SimpleLogin = (props: loginProps) => {
     const users: User[] | undefined = await fetch('http://localhost:8080/users', {
       credentials: 'include',
     })
-      .then(async (res) => (await res.json()).data)
+      .then(async (res) => (await res.json()).body)
       .catch((err) => console.log(err));
     console.log(users);
     if (!users) return;
     const lst: User[] = [];
     users.map((user) => {
+      console.log(user.email, username);
       if (username == user.username) {
+        console.log('same');
         props.setUser(() => user);
         return;
       }
