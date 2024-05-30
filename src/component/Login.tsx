@@ -1,31 +1,53 @@
-import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import axios from 'axios';
-import React from 'react';
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import axios from "axios";
+import { sign } from "crypto";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const clientId = '599467764330-imh8k96aer7kbghf1432dd4vjnj9814j.apps.googleusercontent.com';
+type LoginProps = {
+  signInSuccessUrl: string | undefined;
+  signupUrl: string | undefined;
+  signInFailureUrl: string | undefined;
+};
 
+function setCookie(key: String, value: String, expiration: number) {
+  let today = new Date();
+  today.setDate(today.getDate() + expiration);
+  document.cookie = `${key}=${value}; path=/; expires=${today.toUTCString}; SameSite=None; Secure`;
+}
+
+const Login = (props: LoginProps) => {
+  const host = "http://15.165.25.19:8080";
+  // const host = "http://localhost:8080";
+  const clientId = "599467764330-imh8k96aer7kbghf1432dd4vjnj9814j.apps.googleusercontent.com";
+  const navigate = useNavigate();
   const onSuccess = async (res: CredentialResponse) => {
     const token = res.credential;
-    console.log(token);
     axios.defaults.withCredentials = true;
-    await axios
-      .post('http://localhost:8080/sign-in', {
+    const signInRes = await axios
+      .post(`${host}/sign-in`, {
         token: token,
       })
-      .then((res) => res.data)
+      .then((res) => res.headers["authorization"])
       .catch((err) => console.log(err));
+    console.log(signInRes);
+    if (signInRes) window.localStorage.setItem("Authorization", signInRes);
     const state = await axios
-      .get('http://localhost:8080/login-info')
+      .get(`${host}/login-info`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+        },
+      })
       .then((res) => res.data.body)
       .catch((err) => console.log(err));
     console.log(state);
-    if (state == 'USER') {
-      alert('login succes');
-    } else if (state == 'LIMITED') {
-      alert('user need login');
+    if (state == "USER") {
+      if (props.signInSuccessUrl) navigate(props.signInSuccessUrl);
+    } else if (state == "LIMITED") {
+      console.log(props.signupUrl);
+      if (props.signupUrl) navigate(props.signupUrl);
     } else {
-      alert('login fail');
+      if (props.signInFailureUrl) navigate(props.signInFailureUrl);
     }
   };
 
@@ -38,8 +60,6 @@ const Login = () => {
       </GoogleOAuthProvider>
     </div>
   );
-
-  return <div>hello</div>;
 };
 
 export default Login;

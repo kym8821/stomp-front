@@ -16,6 +16,7 @@ interface SocketClient {
 }
 
 const ChatPage = () => {
+  const host = "15.165.25.19";
   const [user, setUser] = useState<User | undefined>(undefined);
   const recv = useRef<User>();
   const [userList, setUserList] = useState<User[]>([]);
@@ -36,10 +37,10 @@ const ChatPage = () => {
   const getChatList = async () => {
     if (!sender.current || !user) return undefined;
     // chatList 요청
-    const userChatList: Chat[] | undefined = await fetch(`http://localhost:8080/chat/${sender.current.roomId}`, {
+    const userChatList: Chat[] | undefined = await fetch(`http://${host}:8080/chat/${sender.current.roomId}`, {
       credentials: "include",
     })
-      .then(async (res) => (await res.json()).data)
+      .then(async (res) => (await res.json()).body)
       .catch((err) => {
         console.log(err);
         return undefined;
@@ -98,14 +99,14 @@ const ChatPage = () => {
           <UserBox user={_user} />
         </div>
       );
-      const room = await fetch(`http://localhost:8080/chatroom?userId=${user?.id}&userId=${_user.id}`, {
+      const room = await fetch(`http://${host}:8080/chatroom?userIdList=${user?.id},${_user.id}`, {
         credentials: "include",
       })
-        .then(async (res) => (await res.json()).data)
+        .then(async (res) => (await res.json()).body)
         .catch((err) => console.log(err));
       const roomId = room.id;
       const socket = Stomp.over(() => {
-        const sock = new SockJS("http://localhost:8080/ws");
+        const sock = new SockJS(`http://${host}:8080/ws`);
         return sock;
       });
       socket.connect({ user: user.id }, async () => {
